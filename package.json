@@ -1,0 +1,12 @@
+{
+  "name": "helios-bot",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "repository": "git@github.com:MoonSoD/helios-bot.git",
+  "author": "MoonSoD <moonsod8@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "12.5.3",
+    "dotenv": "^10.0.0"
+  }
+}
