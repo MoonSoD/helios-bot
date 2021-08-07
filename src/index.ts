@@ -1,5 +1,9 @@
 import {Client} from 'discord.js';
-import {AModule, CommandRegistry} from "./commands/command-registry";
+import {registerModules} from "./modules";
+
+export * from "./modules/index"
+export * from "./modules/commands/command-registry"
+export * from "./modules/commands/impl/ping-command"
 
 require('dotenv').config()
 
@@ -9,11 +13,8 @@ client.once("ready", () => {
     console.log("Armed and ready!")
 });
 
-const modules: AModule[] = [
-    new CommandRegistry()
-]
-
 client.login(process.env.BOT_TOKEN).then(() => {
     console.log("Logged in!")
-    modules.forEach(({register}) => register())
+
+    registerModules()
 })
