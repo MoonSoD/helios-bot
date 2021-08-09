@@ -8,7 +8,7 @@ import HelpCommand from "./impl/help-command";
 
 class CommandModule extends AModule {
   private commands: ADiscordCommand[] = [PingCommand, HelpCommand];
-  private prefix = process.env.COMMAND_PREFIX ?? ".";
+  public prefix: string = process.env.COMMAND_PREFIX ?? ".";
 
   constructor() {
     super("commands");

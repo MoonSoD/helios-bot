@@ -1,11 +1,10 @@
+import "dotenv/config";
 import { Client } from "discord.js";
 import { registerModules } from "./modules";
 
 export * from "./modules/index";
 export * from "./modules/commands/command-registry";
 export * from "./modules/commands/impl/ping-command";
-
-require("dotenv").config();
 
 export const client = new Client();
 
