@@ -1,15 +1,8 @@
-import {CommandModule} from "./commands/command-registry";
+import { CommandModule } from "./commands/command-registry";
+import { AModule } from "./module.interface";
 
-export abstract class AModule {
-    public abstract register(): void;
-}
-
-const modules: AModule[] = [
-    new CommandModule()
-]
+const modules: AModule[] = [new CommandModule()];
 
 export const registerModules = () => {
-    modules.forEach(module => module.register())
-}
-
-
+  modules.forEach((module) => module.register());
+};

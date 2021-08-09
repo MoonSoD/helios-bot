@@ -1,20 +1,20 @@
-import {Client} from 'discord.js';
-import {registerModules} from "./modules";
+import { Client } from "discord.js";
+import { registerModules } from "./modules";
 
-export * from "./modules/index"
-export * from "./modules/commands/command-registry"
-export * from "./modules/commands/impl/ping-command"
+export * from "./modules/index";
+export * from "./modules/commands/command-registry";
+export * from "./modules/commands/impl/ping-command";
 
-require('dotenv').config()
+require("dotenv").config();
 
-export const client = new Client()
+export const client = new Client();
 
 client.once("ready", () => {
-    console.log("Armed and ready!")
+  console.log("Armed and ready!");
 });
 
 client.login(process.env.BOT_TOKEN).then(() => {
-    console.log("Logged in!")
+  console.log("Logged in!");
 
-    registerModules()
-})
+  registerModules();
+});

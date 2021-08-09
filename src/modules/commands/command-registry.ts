@@ -1,57 +1,67 @@
-import {client} from "../../index";
-import {Message} from "discord.js";
-import {AModule} from "../index";
+import { client } from "../../index";
+import { Message } from "discord.js";
 
-import PingCommand from "./impl/ping-command"
+import PingCommand from "./impl/ping-command";
+import { ADiscordCommand, ArgumentLength } from "./commands.interface";
+import { AModule } from "../module.interface";
+import { match } from "assert/strict";
 
 class CommandModule extends AModule {
-    private commands: ADiscordCommand[] = [PingCommand];
-    private prefix = process.env.COMMAND_PREFIX ?? "+";
+  private commands: ADiscordCommand[] = [PingCommand];
+  private prefix = process.env.COMMAND_PREFIX ?? "+";
 
-    public register() {
-        client.on('message', message => {
-            if (message.content.startsWith(this.prefix)) {
-                this.handleCommand(message);
-            }
-        })
-    }
+  public register() {
+    client.on("message", (message) => {
+      if (message.content.startsWith(this.prefix)) {
+        this.handleCommand(message);
+      }
+    });
+  }
 
-    private async handleCommand(message: Message) {
-        const parsedInput = message.content
-            .toLowerCase()
-            .trim()
-            .split(" ");
+  private async handleCommand(message: Message) {
+    const parsedInput = message.content
+      .substring(1)
+      .toLowerCase()
+      .trim()
+      .split(" ");
 
-        const inputCommandLabel = parsedInput[0]
-        const matchedCommand = this.commands.find(command => command?.options?.label === inputCommandLabel)
+    const inputCommandLabel = parsedInput.shift();
 
-        if (matchedCommand) {
-            parsedInput.shift();
-            matchedCommand.execute(parsedInput, message)
+    const matchedCommand = this.commands.find(
+      (command) => command?.options?.label === inputCommandLabel
+    );
+
+    if (matchedCommand) {
+      // Check argument length
+
+      const argLength: undefined | number | ArgumentLength =
+        matchedCommand.options?.argumentLength;
+
+      if (argLength) {
+        const min: number = argLength.hasOwnProperty("min")
+          ? (argLength as ArgumentLength).min
+          : (argLength as number);
+
+        const max: number = argLength.hasOwnProperty("max")
+          ? (argLength as ArgumentLength).max
+          : (argLength as number);
+
+        if (parsedInput.length < min) {
+          message.reply({
+            content: "Not enough arguments.",
+          });
+        } else if (parsedInput.length > max) {
+          message.reply({
+            content: "Too many arguments.",
+          });
         }
+      }
 
-        return matchedCommand !== undefined;
+      matchedCommand.execute(parsedInput, message);
     }
 
+    return matchedCommand !== undefined;
+  }
 }
 
-interface CommandOptions {
-    label: string;
-    description?: string;
-    usage?: string;
-}
-
-abstract class ADiscordCommand {
-
-    public constructor(
-        public options?: CommandOptions
-    ) {
-    }
-
-    public abstract execute(args: string[], message: Message): void;
-}
-
-export {
-    ADiscordCommand,
-    CommandModule
-}
+export { CommandModule };
