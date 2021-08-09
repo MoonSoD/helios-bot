@@ -15,5 +15,5 @@ export interface CommandOptions {
 export abstract class ADiscordCommand {
   public constructor(public options?: CommandOptions) {}
 
-  public abstract execute(args: string[], message: Message): void;
+  public abstract execute(args: string[], message: Message): boolean;
 }

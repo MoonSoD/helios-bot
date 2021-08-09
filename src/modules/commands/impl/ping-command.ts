@@ -6,8 +6,9 @@ class PingCommand extends ADiscordCommand {
     super({ label: "ping", argumentLength: 0 });
   }
 
-  execute(args: string[], message: Message): void {
+  execute(args: string[], message: Message): boolean {
     message.reply("Pong!");
+    return true;
   }
 }
 
