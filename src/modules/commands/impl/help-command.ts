@@ -1,11 +1,11 @@
-import { Message } from "discord.js";
-import { getModules } from "../../index";
-import { CommandModule } from "../command-registry";
-import { ADiscordCommand } from "../commands.interface";
+import {EmbedFieldData, Message, MessageEmbed} from "discord.js";
+import {getModules} from "../../index";
+import {CommandModule} from "../command-registry";
+import {ADiscordCommand} from "../commands.interface";
 
 class HelpCommand extends ADiscordCommand {
   constructor() {
-    super({ label: "help", argumentLength: 0, usage: "/help" });
+    super({label: "help", argumentLength: 0, usage: "/help"});
   }
 
   execute(args: string[], message: Message): boolean {
@@ -17,21 +17,20 @@ class HelpCommand extends ADiscordCommand {
       return true;
     }
 
-    let list: string = "\n__Commands:__";
+    const commandHelp: EmbedFieldData[] = commandModule.getCommands().map(({options}) => {
+      return {
+        name: options?.usage ?? options?.label,
+        value: options?.description ?? "",
+        inline: true
+      }
+    })
 
-    commandModule.getCommands().forEach((command) => {
-      list = list.concat(
-        `\n${process.env.COMMAND_PREFIX}${
-          command.options?.usage ?? command.options?.label
-        } ${
-          command.options?.description
-            ? "- " + command.options?.description
-            : ""
-        }`
-      );
-    });
+    const helpEmbed = new MessageEmbed()
+      .setColor("#d02f2f")
+      .setTitle("Help")
+      .addFields(commandHelp)
 
-    message.reply(list);
+    message.reply(helpEmbed);
 
     return true;
   }
