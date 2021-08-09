@@ -6,3 +6,7 @@ const modules: AModule[] = [new CommandModule()];
 export const registerModules = () => {
   modules.forEach((module) => module.register());
 };
+
+export const getModules = (): AModule[] => {
+  return modules;
+};

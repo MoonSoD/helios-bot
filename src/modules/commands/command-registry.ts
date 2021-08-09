@@ -10,6 +10,14 @@ class CommandModule extends AModule {
   private commands: ADiscordCommand[] = [PingCommand, HelpCommand];
   private prefix = process.env.COMMAND_PREFIX ?? "+";
 
+  constructor() {
+    super("commands");
+  }
+
+  public getCommands(): ADiscordCommand[] {
+    return this.commands;
+  }
+
   public register() {
     client.on("message", (message) => {
       if (message.content.startsWith(this.prefix)) {
@@ -46,7 +54,7 @@ class CommandModule extends AModule {
     const argLength: undefined | number | ArgumentLength =
       matchedCommand.options?.argumentLength;
 
-    if (argLength) {
+    if (argLength !== undefined) {
       const min: number = argLength.hasOwnProperty("min")
         ? (argLength as ArgumentLength).min
         : (argLength as number);
@@ -59,16 +67,19 @@ class CommandModule extends AModule {
         message.reply({
           content: "Not enough arguments.",
         });
+        return;
       } else if (parsedInput.length > max) {
         message.reply({
           content: "Too many arguments.",
         });
+        return;
       }
     }
 
     if (!matchedCommand.execute(parsedInput, message)) {
       if (matchedCommand.options?.usage) {
         message.reply(`Usage: ${matchedCommand.options?.usage}`);
+        return;
       }
     }
   }
